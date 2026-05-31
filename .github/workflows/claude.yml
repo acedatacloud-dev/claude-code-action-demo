@@ -90,7 +90,7 @@ jobs:
             if curl -sS -o /dev/null -w "%{http_code}" http://127.0.0.1:8788/ | grep -q .; then break; fi
             sleep 0.3
           done
-          echo "proxy up"
+          echo "proxy up; ACEDATA_TOKEN length=${#ACEDATA_TOKEN}"
 
       - name: Run Claude Code via AceData Cloud
         uses: anthropics/claude-code-action@v1
