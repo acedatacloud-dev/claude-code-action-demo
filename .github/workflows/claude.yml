@@ -23,6 +23,9 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
+    env:
+      ANTHROPIC_BASE_URL: https://api.acedata.cloud
+      ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,10 +34,7 @@ jobs:
       - name: Run Claude Code via AceData Cloud
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: |
             --model claude-opus-4-7
           show_full_output: 'true'
-        env:
-          ANTHROPIC_BASE_URL: https://api.acedata.cloud
