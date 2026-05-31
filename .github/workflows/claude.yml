@@ -34,7 +34,7 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: |
-            --model claude-sonnet-4-5
+            --model claude-sonnet-4-5-20250929
         env:
           ANTHROPIC_BASE_URL: https://api.acedata.cloud
           ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
