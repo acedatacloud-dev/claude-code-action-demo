@@ -37,4 +37,5 @@ jobs:
             --model claude-opus-4-7
         env:
           ANTHROPIC_BASE_URL: https://api.acedata.cloud
-          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_CUSTOM_HEADERS: |
+            Authorization: Bearer ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
