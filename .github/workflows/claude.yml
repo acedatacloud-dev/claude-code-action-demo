@@ -46,14 +46,18 @@ jobs:
                   body = self.rfile.read(int(self.headers.get("Content-Length") or 0)) if method in ("POST","PUT","PATCH") else None
                   url = UPSTREAM + self.path
                   req = urllib.request.Request(url, data=body, method=method)
+                  fwd = []
                   for k,v in self.headers.items():
                       if k.lower() in HOP or k.lower() in ("authorization","x-api-key"):
                           continue
                       req.add_header(k, v)
+                      fwd.append(k)
                   req.add_header("Authorization", f"Bearer {TOKEN}")
+                  sys.stderr.write(f"[proxy] -> {method} {url} fwd_hdrs={fwd} body_len={len(body) if body else 0}\n")
                   try:
                       resp = urllib.request.urlopen(req, timeout=600)
                       data = resp.read()
+                      sys.stderr.write(f"[proxy] <- {resp.status} body={data[:300]!r}\n")
                       self.send_response(resp.status)
                       for k,v in resp.headers.items():
                           if k.lower() in HOP: continue
@@ -63,6 +67,7 @@ jobs:
                       self.wfile.write(data)
                   except urllib.error.HTTPError as e:
                       data = e.read()
+                      sys.stderr.write(f"[proxy] <- {e.code} ERR body={data[:500]!r}\n")
                       self.send_response(e.code)
                       for k,v in e.headers.items():
                           if k.lower() in HOP: continue
@@ -74,7 +79,7 @@ jobs:
               def do_POST(self): self._proxy("POST")
               def do_PUT(self): self._proxy("PUT")
               def do_DELETE(self): self._proxy("DELETE")
-              def log_message(self, *a, **k): sys.stderr.write("[proxy] " + (a[0] % a[1:]) + "\n")
+              def log_message(self, *a, **k): pass
           class T(socketserver.ThreadingMixIn, http.server.HTTPServer):
               daemon_threads = True
               allow_reuse_address = True
